@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "raft-ats-backend"
+version = "0.1.0"
+description = "FastAPI backend for Raft ATS"
+authors = ["Admin <admin@raftats.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.110.0"
+uvicorn = {extras = ["standard"], version = "^0.28.0"}
+sqlalchemy = "^2.0.28"
+alembic = "^1.13.1"
+psycopg2-binary = "^2.9.9"
+pydantic = "^2.6.3"
+pydantic-settings = "^2.2.1"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
