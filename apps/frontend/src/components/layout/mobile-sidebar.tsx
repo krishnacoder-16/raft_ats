@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, X, LayoutDashboard, Users, Briefcase, GitBranch, CalendarDays, BarChart3, BrainCircuit, Settings } from "lucide-react";
+import { Menu, X, LayoutDashboard, Users, Briefcase, GitBranch, BarChart3, Settings } from "lucide-react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -12,9 +12,7 @@ const navItems = [
   { icon: Users, label: "Candidates", href: "/candidates" },
   { icon: Briefcase, label: "Jobs", href: "/jobs" },
   { icon: GitBranch, label: "Pipeline", href: "/pipeline" },
-  { icon: CalendarDays, label: "Interviews", href: "/interviews" },
   { icon: BarChart3, label: "Analytics", href: "/analytics" },
-  { icon: BrainCircuit, label: "AI Insights", href: "/ai-insights" },
   { icon: Settings, label: "Settings", href: "/settings" },
 ];
 

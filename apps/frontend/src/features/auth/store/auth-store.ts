@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { User, AuthState } from '../types';
 
-interface AuthStore extends AuthState {
+export interface AuthStore extends AuthState {
   login: (user: User, token: string) => void;
   logout: () => void;
 }
@@ -14,11 +14,15 @@ export const useAuthStore = create<AuthStore>()(
       isAuthenticated: false,
       isLoading: false,
       login: (user, token) => {
-        localStorage.setItem('access_token', token);
+        if (typeof window !== "undefined") {
+          localStorage.setItem('access_token', token);
+        }
         set({ user, isAuthenticated: true });
       },
       logout: () => {
-        localStorage.removeItem('access_token');
+        if (typeof window !== "undefined") {
+          localStorage.removeItem('access_token');
+        }
         set({ user: null, isAuthenticated: false });
       },
     }),

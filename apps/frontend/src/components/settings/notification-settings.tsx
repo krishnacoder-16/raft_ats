@@ -3,10 +3,7 @@ import { SettingsSection } from "./settings-section";
 export function NotificationSettings() {
   const notifications = [
     { title: "New Candidate Application", desc: "When a candidate applies to an active requisition.", email: true, inApp: true },
-    { title: "Interview Scheduled", desc: "When an interview calendar invite is confirmed.", email: true, inApp: true },
-    { title: "Feedback Pending", desc: "Reminders to submit scorecard feedback after interviews.", email: true, inApp: true },
     { title: "Offer Accepted", desc: "When a candidate signs an offer letter.", email: true, inApp: true },
-    { title: "AI Pipeline Risks", desc: "Alerts when AI detects drops in hiring velocity.", email: false, inApp: true },
   ];
 
   return (

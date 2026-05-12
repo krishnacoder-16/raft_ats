@@ -12,7 +12,7 @@ export function TopNavbar() {
           <Search className="absolute left-3.5 h-4 w-4 text-muted-foreground" />
           <input 
             type="text" 
-            placeholder="Search candidates, jobs, or interviews..." 
+            placeholder="Search candidates or jobs..." 
             className="w-full h-10 pl-10 pr-4 rounded-full bg-muted/60 border-transparent text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-background transition-all"
           />
         </div>

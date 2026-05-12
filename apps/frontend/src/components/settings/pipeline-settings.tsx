@@ -5,8 +5,7 @@ export function PipelineSettings() {
   const stages = [
     { name: "Applied", color: "bg-slate-500" },
     { name: "Screening", color: "bg-blue-500" },
-    { name: "L1 Interview", color: "bg-purple-500" },
-    { name: "L2 Interview", color: "bg-fuchsia-500" },
+    { name: "Interview", color: "bg-purple-500" },
     { name: "Offer Review", color: "bg-amber-500" },
     { name: "Hired", color: "bg-emerald-500" },
   ];

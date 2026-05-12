@@ -4,9 +4,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 
 const data = [
   { stage: "Screening", days: 2 },
-  { stage: "L1 Interview", days: 5 },
+  { stage: "Interview", days: 9 },
   { stage: "Take Home Task", days: 8 },
-  { stage: "Final Interview", days: 4 },
   { stage: "Offer Review", days: 3 },
 ];
 

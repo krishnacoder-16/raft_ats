@@ -9,11 +9,11 @@ import { JobDetailsDrawer } from "@/components/jobs/job-details-drawer";
 import type { Job } from "@/types/job";
 
 const mockJobs: Job[] = [
-  { id: "1", title: "Senior Frontend Engineer", client: "Stark Industries", department: "Engineering", location: "Remote, US", recruiter: "Jane Doe", openings: 2, status: "Active", priority: "High", experience: "5+ years", candidateCount: 45, interviewCount: 12, offersCount: 1, postedDate: "Oct 10, 2023" },
-  { id: "2", title: "Product Manager", client: "Acme Corp", department: "Product", location: "New York, NY", recruiter: "John Smith", openings: 1, status: "Active", priority: "Medium", experience: "4+ years", candidateCount: 28, interviewCount: 5, offersCount: 0, postedDate: "Oct 15, 2023" },
-  { id: "3", title: "UX Designer", client: "Wayne Enterprises", department: "Design", location: "Gotham, NJ", recruiter: "Jane Doe", openings: 3, status: "Draft", priority: "Low", experience: "3+ years", candidateCount: 0, interviewCount: 0, offersCount: 0, postedDate: "Oct 28, 2023" },
-  { id: "4", title: "Backend Developer", client: "Stark Industries", department: "Engineering", location: "Remote, US", recruiter: "John Smith", openings: 2, status: "On Hold", priority: "Medium", experience: "4+ years", candidateCount: 65, interviewCount: 18, offersCount: 2, postedDate: "Sep 20, 2023" },
-  { id: "5", title: "Data Scientist", client: "LexCorp", department: "Data", location: "Metropolis, NY", recruiter: "Jane Doe", openings: 1, status: "Closed", priority: "High", experience: "6+ years", candidateCount: 120, interviewCount: 25, offersCount: 1, postedDate: "Aug 15, 2023" },
+  { id: "1", title: "Senior Frontend Engineer", client: "Stark Industries", department: "Engineering", location: "Remote, US", recruiter: "Jane Doe", openings: 2, status: "Active", priority: "High", experience: "5+ years", candidateCount: 45, offersCount: 1, postedDate: "Oct 10, 2023" },
+  { id: "2", title: "Product Manager", client: "Acme Corp", department: "Product", location: "New York, NY", recruiter: "John Smith", openings: 1, status: "Active", priority: "Medium", experience: "4+ years", candidateCount: 28, offersCount: 0, postedDate: "Oct 15, 2023" },
+  { id: "3", title: "UX Designer", client: "Wayne Enterprises", department: "Design", location: "Gotham, NJ", recruiter: "Jane Doe", openings: 3, status: "Draft", priority: "Low", experience: "3+ years", candidateCount: 0, offersCount: 0, postedDate: "Oct 28, 2023" },
+  { id: "4", title: "Backend Developer", client: "Stark Industries", department: "Engineering", location: "Remote, US", recruiter: "John Smith", openings: 2, status: "On Hold", priority: "Medium", experience: "4+ years", candidateCount: 65, offersCount: 2, postedDate: "Sep 20, 2023" },
+  { id: "5", title: "Data Scientist", client: "LexCorp", department: "Data", location: "Metropolis, NY", recruiter: "Jane Doe", openings: 1, status: "Closed", priority: "High", experience: "6+ years", candidateCount: 120, offersCount: 1, postedDate: "Aug 15, 2023" },
 ];
 
 export default function JobsPage() {

@@ -2,8 +2,8 @@ import { SettingsSection } from "./settings-section";
 
 export function IntegrationSettings() {
   const integrations = [
-    { name: "Google Workspace", desc: "Sync calendar events and meet links.", status: "Connected", icon: "G" },
-    { name: "Zoom", desc: "Generate video interview links automatically.", status: "Connect", icon: "Z" },
+    { name: "Google Workspace", desc: "Sync calendar and organization tools.", status: "Connected", icon: "G" },
+    { name: "Zoom", desc: "Video conferencing for team meetings.", status: "Connect", icon: "Z" },
     { name: "LinkedIn Recruiter", desc: "Import candidates directly from LinkedIn.", status: "Connected", icon: "in" },
     { name: "Slack", desc: "Send hiring alerts to Slack channels.", status: "Connect", icon: "S" },
   ];

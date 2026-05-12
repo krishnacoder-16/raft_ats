@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
-import { Building2, Users, KanbanSquare, BrainCircuit, Bell, Blocks, Palette } from "lucide-react";
+import { Building2, Users, KanbanSquare, Bell, Blocks, Palette } from "lucide-react";
 
-export type SettingsTab = "organization" | "users" | "pipeline" | "ai" | "notifications" | "integrations" | "appearance";
+export type SettingsTab = "organization" | "users" | "pipeline" | "notifications" | "integrations" | "appearance";
 
 interface SettingsSidebarProps {
   activeTab: SettingsTab;
@@ -13,7 +13,6 @@ export function SettingsSidebar({ activeTab, onTabChange }: SettingsSidebarProps
     { id: "organization", label: "Organization", icon: Building2 },
     { id: "users", label: "Users & Roles", icon: Users },
     { id: "pipeline", label: "Pipeline Config", icon: KanbanSquare },
-    { id: "ai", label: "AI Configuration", icon: BrainCircuit },
     { id: "notifications", label: "Notifications", icon: Bell },
     { id: "integrations", label: "Integrations", icon: Blocks },
     { id: "appearance", label: "Appearance", icon: Palette },

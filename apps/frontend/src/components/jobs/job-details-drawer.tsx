@@ -1,6 +1,6 @@
 "use client";
 
-import { X, Edit2, Users, Calendar, Briefcase } from "lucide-react";
+import { X, Edit2, Users, Briefcase } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Job } from "@/types/job";
 import { JobStatusBadge } from "./job-status-badge";
@@ -66,12 +66,6 @@ export function JobDetailsDrawer({ isOpen, onClose, job }: JobDetailsDrawerProps
                       <Users className="h-4 w-4" /> <span className="text-sm font-bold">Total Candidates</span>
                     </div>
                     <span className="font-extrabold text-lg">{job.candidateCount}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2.5 text-muted-foreground">
-                      <Calendar className="h-4 w-4" /> <span className="text-sm font-bold">Interviews Scheduled</span>
-                    </div>
-                    <span className="font-extrabold text-lg">{job.interviewCount}</span>
                   </div>
                   <div className="flex justify-between items-center text-primary pt-2 border-t">
                     <div className="flex items-center gap-2.5">

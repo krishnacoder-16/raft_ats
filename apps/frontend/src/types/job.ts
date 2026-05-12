@@ -10,7 +10,6 @@ export type Job = {
   priority: "High" | "Medium" | "Low";
   experience: string;
   candidateCount: number;
-  interviewCount: number;
   offersCount: number;
   postedDate: string;
 };

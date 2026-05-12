@@ -3,10 +3,10 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 const data = [
-  { name: "John S.", candidates: 140, interviews: 85, offers: 12 },
-  { name: "Jane D.", candidates: 210, interviews: 110, offers: 18 },
-  { name: "Alex A.", candidates: 95, interviews: 65, offers: 8 },
-  { name: "Sarah C.", candidates: 180, interviews: 90, offers: 15 },
+  { name: "John S.", candidates: 140, offers: 12 },
+  { name: "Jane D.", candidates: 210, offers: 18 },
+  { name: "Alex A.", candidates: 95, offers: 8 },
+  { name: "Sarah C.", candidates: 180, offers: 15 },
 ];
 
 export function RecruiterPerformanceChart() {
@@ -28,7 +28,6 @@ export function RecruiterPerformanceChart() {
             />
             <Legend wrapperStyle={{ paddingTop: '20px', fontWeight: 'bold', fontSize: '12px' }} iconType="circle" />
             <Bar dataKey="candidates" name="Candidates" fill="#94a3b8" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="interviews" name="Interviews" fill="#f97316" radius={[4, 4, 0, 0]} />
             <Bar dataKey="offers" name="Offers" fill="#10b981" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>

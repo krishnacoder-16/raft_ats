@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreHorizontal, FileText, UserCheck, UserX, Calendar } from "lucide-react";
+import { MoreHorizontal, FileText, UserCheck, UserX } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import type { Candidate } from "@/types/candidate";
 
@@ -33,9 +33,6 @@ export function CandidateRowActions({ candidate }: { candidate: Candidate }) {
         <div className="absolute right-0 top-full mt-1 w-48 bg-card border shadow-lg rounded-xl z-50 py-1 overflow-hidden" onClick={(e) => e.stopPropagation()}>
           <button className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors">
             <FileText className="h-4 w-4" /> View Resume
-          </button>
-          <button className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors">
-            <Calendar className="h-4 w-4" /> Schedule Interview
           </button>
           <div className="h-px w-full bg-border my-1" />
           <button className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-primary hover:bg-primary/5 transition-colors">

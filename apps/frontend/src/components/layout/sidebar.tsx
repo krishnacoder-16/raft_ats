@@ -8,9 +8,7 @@ import {
   Users,
   Briefcase,
   GitBranch,
-  CalendarDays,
   BarChart3,
-  BrainCircuit,
   Settings,
   ChevronLeft,
   ChevronRight
@@ -22,9 +20,7 @@ const navItems = [
   { icon: Users, label: "Candidates", href: "/candidates" },
   { icon: Briefcase, label: "Jobs", href: "/jobs" },
   { icon: GitBranch, label: "Pipeline", href: "/pipeline" },
-  { icon: CalendarDays, label: "Interviews", href: "/interviews" },
   { icon: BarChart3, label: "Analytics", href: "/analytics" },
-  { icon: BrainCircuit, label: "AI Insights", href: "/ai-insights" },
   { icon: Settings, label: "Settings", href: "/settings" },
 ];
 

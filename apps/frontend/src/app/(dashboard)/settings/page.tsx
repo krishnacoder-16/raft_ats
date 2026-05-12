@@ -5,7 +5,6 @@ import { SettingsSidebar, SettingsTab } from "@/components/settings/settings-sid
 import { OrganizationSettings } from "@/components/settings/organization-settings";
 import { UserRoleManagement } from "@/components/settings/user-role-management";
 import { PipelineSettings } from "@/components/settings/pipeline-settings";
-import { AiConfiguration } from "@/components/settings/ai-configuration";
 import { NotificationSettings } from "@/components/settings/notification-settings";
 import { IntegrationSettings } from "@/components/settings/integration-settings";
 import { AppearanceSettings } from "@/components/settings/appearance-settings";
@@ -18,7 +17,6 @@ export default function SettingsPage() {
       case "organization": return <OrganizationSettings />;
       case "users": return <UserRoleManagement />;
       case "pipeline": return <PipelineSettings />;
-      case "ai": return <AiConfiguration />;
       case "notifications": return <NotificationSettings />;
       case "integrations": return <IntegrationSettings />;
       case "appearance": return <AppearanceSettings />;
