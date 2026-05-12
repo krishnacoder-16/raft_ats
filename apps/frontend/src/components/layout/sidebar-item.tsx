@@ -21,20 +21,20 @@ export function SidebarItem({ icon: Icon, label, href }: SidebarItemProps) {
     <Link
       href={href}
       className={cn(
-        "flex items-center gap-3 rounded-lg px-3 py-2 transition-all group relative",
+        "flex items-center gap-3.5 rounded-xl px-3.5 py-2.5 transition-all group relative",
         active
-          ? "bg-primary text-primary-foreground shadow-sm"
-          : "text-sidebar-foreground/70 hover:bg-white/10 hover:text-sidebar-foreground"
+          ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+          : "text-sidebar-foreground/60 hover:bg-white/5 hover:text-sidebar-foreground"
       )}
     >
-      <Icon className="h-5 w-5 shrink-0" />
+      <Icon className="h-5 w-5 shrink-0 transition-transform group-hover:scale-110" />
       {sidebarOpen && (
-        <span className="text-sm font-medium animate-in fade-in duration-200">
+        <span className="text-sm font-bold animate-in fade-in duration-200 tracking-tight">
           {label}
         </span>
       )}
       {!sidebarOpen && (
-        <div className="absolute left-full rounded-md px-2 py-1.5 ml-4 bg-sidebar-background text-sidebar-foreground text-sm font-medium invisible opacity-0 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 z-50 whitespace-nowrap border border-white/10 shadow-xl pointer-events-none">
+        <div className="absolute left-full rounded-xl px-3 py-2 ml-4 bg-sidebar-background text-sidebar-foreground text-xs font-bold invisible opacity-0 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 z-50 whitespace-nowrap border border-white/10 shadow-2xl pointer-events-none tracking-tight">
           {label}
         </div>
       )}

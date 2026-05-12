@@ -1,23 +1,23 @@
-import { Briefcase, CheckCircle2, AlertCircle, Users } from "lucide-react";
+import { Briefcase, Users, Flame, UserCheck } from "lucide-react";
 
 export function JobKpiCards() {
   const kpis = [
-    { title: "Active Requisitions", value: "24", icon: Briefcase, color: "text-primary", bg: "bg-primary/10" },
-    { title: "High Priority", value: "7", icon: AlertCircle, color: "text-red-600", bg: "bg-red-100/60 border border-red-200" },
-    { title: "Hired This Month", value: "12", icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-100/60 border border-emerald-200" },
-    { title: "Candidates in Pipe", value: "342", icon: Users, color: "text-blue-600", bg: "bg-blue-100/60 border border-blue-200" },
+    { label: "Job Requisitions", value: "24", icon: Briefcase, color: "text-blue-600", bg: "bg-blue-50" },
+    { label: "Candidates in Pipe", value: "1,284", icon: Users, color: "text-orange-600", bg: "bg-orange-50" },
+    { label: "Priority Breakdown", value: "12 High", icon: Flame, color: "text-red-600", bg: "bg-red-50" },
+    { label: "Hired This Month", value: "8", icon: UserCheck, color: "text-emerald-600", bg: "bg-emerald-50" },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      {kpis.map((kpi, i) => (
-        <div key={i} className="bg-card border rounded-xl p-5 shadow-sm flex items-center gap-5 hover:shadow-md transition-all">
-          <div className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 ${kpi.bg} ${kpi.color}`}>
-            <kpi.icon className="h-7 w-7" />
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-2">
+      {kpis.map((kpi) => (
+        <div key={kpi.label} className="bg-card p-5 rounded-xl border shadow-sm flex items-center gap-4 transition-all hover:shadow-md group cursor-default">
+          <div className={`p-3 rounded-xl transition-transform group-hover:scale-110 ${kpi.bg}`}>
+            <kpi.icon className={`h-5 w-5 ${kpi.color}`} />
           </div>
           <div>
-            <p className="text-sm font-bold text-muted-foreground tracking-tight">{kpi.title}</p>
-            <h3 className="text-3xl font-black text-foreground mt-0.5">{kpi.value}</h3>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest leading-none">{kpi.label}</p>
+            <p className="text-2xl font-black text-foreground mt-2 tracking-tight">{kpi.value}</p>
           </div>
         </div>
       ))}

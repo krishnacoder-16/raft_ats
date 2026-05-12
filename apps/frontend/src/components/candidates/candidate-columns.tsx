@@ -13,20 +13,20 @@ export const columns: ColumnDef<Candidate>[] = [
     header: "Candidate Name",
     cell: ({ row }) => (
       <div className="flex flex-col">
-        <span className="font-semibold text-foreground whitespace-nowrap">{row.getValue("name")}</span>
-        <span className="text-xs text-muted-foreground">{row.original.email}</span>
+        <span className="font-bold text-foreground text-sm tracking-tight whitespace-nowrap">{row.getValue("name")}</span>
+        <span className="text-[11px] font-medium text-muted-foreground tracking-tight">{row.original.email}</span>
       </div>
     ),
   },
   {
     accessorKey: "role",
     header: "Role Applied",
-    cell: ({ row }) => <span className="font-medium text-muted-foreground whitespace-nowrap">{row.getValue("role")}</span>,
+    cell: ({ row }) => <span className="font-semibold text-muted-foreground text-sm whitespace-nowrap tracking-tight">{row.getValue("role")}</span>,
   },
   {
     accessorKey: "experience",
     header: "Experience",
-    cell: ({ row }) => <span className="text-muted-foreground whitespace-nowrap">{row.getValue("experience")}</span>,
+    cell: ({ row }) => <span className="text-muted-foreground text-sm font-medium whitespace-nowrap">{row.getValue("experience")}</span>,
   },
   {
     accessorKey: "status",
@@ -41,17 +41,17 @@ export const columns: ColumnDef<Candidate>[] = [
   {
     accessorKey: "recruiter",
     header: "Recruiter",
-    cell: ({ row }) => <span className="text-sm font-medium whitespace-nowrap">{row.getValue("recruiter")}</span>,
+    cell: ({ row }) => <span className="text-sm font-bold text-foreground whitespace-nowrap tracking-tight">{row.getValue("recruiter")}</span>,
   },
   {
     accessorKey: "submitted",
     header: "CV Submitted",
-    cell: ({ row }) => <span className="text-sm text-muted-foreground whitespace-nowrap">{row.getValue("submitted")}</span>,
+    cell: ({ row }) => <span className="text-[12px] font-bold text-muted-foreground whitespace-nowrap tracking-tight uppercase tracking-widest">{row.getValue("submitted")}</span>,
   },
   {
     accessorKey: "lastActivity",
     header: "Last Activity",
-    cell: ({ row }) => <span className="text-sm text-muted-foreground whitespace-nowrap">{row.getValue("lastActivity")}</span>,
+    cell: ({ row }) => <span className="text-[12px] font-bold text-muted-foreground whitespace-nowrap tracking-tight uppercase tracking-widest">{row.getValue("lastActivity")}</span>,
   },
   {
     id: "actions",

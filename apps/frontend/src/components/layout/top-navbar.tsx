@@ -5,7 +5,7 @@ import { MobileSidebar } from "./mobile-sidebar";
 
 export function TopNavbar() {
   return (
-    <header className="h-16 border-b bg-card flex items-center justify-between px-4 lg:px-8 sticky top-0 z-30 shrink-0 shadow-sm">
+    <header className="h-16 border-b bg-card flex items-center justify-between px-4 lg:px-8 shrink-0">
       <div className="flex items-center gap-4 flex-1">
         <MobileSidebar />
         <div className="relative w-full max-w-md hidden sm:flex items-center">

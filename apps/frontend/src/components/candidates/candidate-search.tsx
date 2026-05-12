@@ -12,7 +12,7 @@ export function CandidateSearch() {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         placeholder="Search candidates by name, email, or role..." 
-        className="w-full h-10 pl-10 pr-4 rounded-lg bg-card border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all shadow-sm"
+        className="w-full h-10 pl-10 pr-4 rounded-lg bg-muted/40 border border-border text-sm focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all font-bold placeholder:font-medium shadow-sm"
       />
     </div>
   );

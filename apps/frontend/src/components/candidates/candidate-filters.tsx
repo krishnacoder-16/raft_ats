@@ -13,7 +13,7 @@ export function CandidateFilters() {
       <select 
         value={filters.role}
         onChange={(e) => setFilters({ role: e.target.value })}
-        className="h-10 px-3 py-2 rounded-lg bg-card border border-border text-xs font-bold shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer text-foreground transition-all hover:border-primary/50"
+        className="h-10 px-3 py-1 rounded-lg bg-card border border-border text-[11px] font-black uppercase tracking-[0.1em] shadow-sm focus:outline-none focus:ring-1 focus:ring-primary/30 cursor-pointer text-foreground transition-all hover:border-primary/50"
       >
         <option>All Roles</option>
         <option>Senior Frontend Engineer</option>
@@ -28,7 +28,7 @@ export function CandidateFilters() {
       <select 
         value={filters.stage}
         onChange={(e) => setFilters({ stage: e.target.value })}
-        className="h-10 px-3 py-2 rounded-lg bg-card border border-border text-xs font-bold shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer text-foreground transition-all hover:border-primary/50"
+        className="h-10 px-3 py-1 rounded-lg bg-card border border-border text-[11px] font-black uppercase tracking-[0.1em] shadow-sm focus:outline-none focus:ring-1 focus:ring-primary/30 cursor-pointer text-foreground transition-all hover:border-primary/50"
       >
         <option>All Stages</option>
         <option>Shortlisted</option>
@@ -39,9 +39,9 @@ export function CandidateFilters() {
 
       <button 
         onClick={() => setIsDrawerOpen(true)}
-        className="h-10 px-4 rounded-lg border border-border bg-card shadow-sm hover:bg-muted flex items-center gap-2 text-xs font-bold transition-all text-foreground hover:border-primary/50"
+        className="h-10 px-4 rounded-lg border border-border bg-card shadow-sm hover:bg-muted flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.1em] transition-all text-foreground hover:border-primary/50"
       >
-        <Filter className="h-3.5 w-3.5 text-primary" /> 
+        <Filter className="h-4 w-4 text-primary" /> 
         More Filters
       </button>
 

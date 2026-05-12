@@ -3,22 +3,22 @@
 import { CandidateTable } from "@/components/candidates/candidate-table";
 import { CandidateSearch } from "@/components/candidates/candidate-search";
 import { CandidateFilters } from "@/components/candidates/candidate-filters";
-import { AddCandidateModal } from "@/components/candidates/add-candidate-modal";
+import { CandidateKpiCards } from "@/components/candidates/candidate-kpi-cards";
 import { CandidateDetailsDrawer } from "@/components/candidates/candidate-details-drawer";
 import { useCandidateStore } from "@/features/candidates/store/candidate-store";
 import { Plus, X } from "lucide-react";
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import type { Candidate } from "@/types/candidate";
 
 export default function CandidatesPage() {
+  const router = useRouter();
   const { candidates, searchQuery, filters, pagination, setPagination, setFilters, resetFilters } = useCandidateStore();
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
 
   const filteredCandidates = useMemo(() => {
     return candidates.filter((c) => {
-      // Search
       const searchMatch = 
         c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         c.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -26,18 +26,14 @@ export default function CandidatesPage() {
         c.recruiter.toLowerCase().includes(searchQuery.toLowerCase());
 
       if (!searchMatch) return false;
-
-      // Basic Filters
       if (filters.role !== "All Roles" && c.role !== filters.role) return false;
       if (filters.stage !== "All Stages" && c.stage !== filters.stage) return false;
       if (filters.recruiter !== "All Recruiters" && c.recruiter !== filters.recruiter) return false;
       if (filters.status !== "All Status" && c.status !== filters.status) return false;
       
-      // More Filters
       const exp = parseInt(c.experience) || 0;
       if (exp < filters.experienceRange[0] || exp > filters.experienceRange[1]) return false;
       if (c.aiScore < filters.aiScoreRange[0] || c.aiScore > filters.aiScoreRange[1]) return false;
-
       return true;
     });
   }, [candidates, searchQuery, filters]);
@@ -64,18 +60,20 @@ export default function CandidatesPage() {
 
   return (
     <div className="space-y-6 pb-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-foreground">Candidate Management</h1>
-          <p className="text-sm font-medium text-muted-foreground mt-1">Manage, filter, and review applications across all open roles.</p>
+          <p className="text-sm font-medium text-muted-foreground mt-1">Manage and track your candidate pipeline with real-time operational insights.</p>
         </div>
         <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="px-4 py-2.5 text-sm font-bold rounded-lg bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors flex items-center gap-2"
+          onClick={() => router.push("/candidates/create")}
+          className="px-4 py-2.5 text-sm font-bold rounded-lg bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors flex items-center gap-2 whitespace-nowrap"
         >
           <Plus className="h-4 w-4" /> Add Candidate
         </button>
       </div>
+
+      <CandidateKpiCards />
 
       <div className="space-y-4">
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between bg-card p-4 rounded-xl border shadow-sm">
@@ -122,8 +120,7 @@ export default function CandidatesPage() {
           setIsDrawerOpen(true);
         }}
       />
-
-      <AddCandidateModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
+      
       <CandidateDetailsDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}

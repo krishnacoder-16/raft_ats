@@ -11,7 +11,11 @@ const statusStyles: Record<string, string> = {
 
 export function StatusBadge({ status, className }: { status: string; className?: string }) {
   return (
-    <span className={cn("px-2.5 py-1 text-xs font-semibold rounded-full whitespace-nowrap", statusStyles[status] || statusStyles["Applied"], className)}>
+    <span className={cn(
+      "px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-full whitespace-nowrap border border-current/10", 
+      statusStyles[status] || statusStyles["Applied"], 
+      className
+    )}>
       {status}
     </span>
   );
