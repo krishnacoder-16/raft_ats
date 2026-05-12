@@ -7,15 +7,19 @@ import { CandidateKpiCards } from "@/components/candidates/candidate-kpi-cards";
 import { CandidateDetailsDrawer } from "@/components/candidates/candidate-details-drawer";
 import { useCandidateStore } from "@/features/candidates/store/candidate-store";
 import { Plus, X } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import type { Candidate } from "@/types/candidate";
 
 export default function CandidatesPage() {
   const router = useRouter();
-  const { candidates, searchQuery, filters, pagination, setPagination, setFilters, resetFilters } = useCandidateStore();
+  const { candidates, searchQuery, filters, pagination, setPagination, setFilters, resetFilters, fetchCandidates, isLoading, error } = useCandidateStore();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
+
+  useEffect(() => {
+    fetchCandidates();
+  }, [fetchCandidates]);
 
   const filteredCandidates = useMemo(() => {
     return candidates.filter((c) => {
@@ -112,14 +116,26 @@ export default function CandidatesPage() {
         )}
       </div>
 
-      <CandidateTable
-        data={paginatedCandidates}
-        totalCount={filteredCandidates.length}
-        onRowClick={(candidate) => {
-          setSelectedCandidate(candidate);
-          setIsDrawerOpen(true);
-        }}
-      />
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center py-20 bg-card rounded-xl border shadow-sm">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
+          <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Loading Candidates...</p>
+        </div>
+      ) : error ? (
+        <div className="flex flex-col items-center justify-center py-20 bg-card rounded-xl border shadow-sm">
+          <p className="text-sm font-bold text-destructive uppercase tracking-widest">Error Loading Candidates</p>
+          <p className="text-xs text-muted-foreground mt-2">{error}</p>
+        </div>
+      ) : (
+        <CandidateTable
+          data={paginatedCandidates}
+          totalCount={filteredCandidates.length}
+          onRowClick={(candidate) => {
+            setSelectedCandidate(candidate);
+            setIsDrawerOpen(true);
+          }}
+        />
+      )}
       
       <CandidateDetailsDrawer
         isOpen={isDrawerOpen}

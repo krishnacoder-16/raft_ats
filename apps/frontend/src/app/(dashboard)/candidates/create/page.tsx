@@ -125,24 +125,66 @@ export default function CreateCandidatePage() {
   const [toast, setToast] = useState<string | null>(null);
   const [resume, setResume] = useState<File | null>(null);
 
-  const handleAddCandidate = () => {
-    const newCandidate: Candidate = {
-      id: `C-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`,
-      ...formData,
-      skills: formData.skills.join(", "),
-      location: {
-        state: formData.state,
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const resetFormData = () => {
+    setFormData({
+      name: "", email: "", phone: "", role: "",
+      experience: "", currentCompany: "", currentSalary: "", expectedSalary: "",
+      noticePeriod: "", totalExperience: "", skills: [],
+      state: "", city: "", pincode: "", recruiter: "John Smith", stage: "Source",
+      notes: "",
+    });
+    setResume(null);
+  };
+
+  const handleAddCandidate = async () => {
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        fullName: formData.name,
+        email: formData.email,
+        phone: formData.phone,
         city: formData.city,
-        pincode: formData.pincode,
-      },
-      status: "Active",
-      aiScore: Math.floor(Math.random() * 40) + 60,
-      submitted: new Date().toISOString().split('T')[0],
-      lastActivity: "Just now",
-    };
-    addCandidate(newCandidate);
-    setToast("Candidate Added Successfully");
-    setTimeout(() => router.push("/candidates"), 1000);
+        state: formData.state,
+        zip: formData.pincode,
+        currentCompany: formData.currentCompany,
+        currentRole: formData.role,
+        totalExperience: formData.totalExperience,
+        noticePeriod: formData.noticePeriod,
+        assignedRecruiter: formData.recruiter,
+        currentCTC: formData.currentSalary.replace(/[^0-9.]/g, ""), // Strip currency symbols
+        expectedCTC: formData.expectedSalary.replace(/[^0-9.]/g, ""),
+        technicalSkills: formData.skills,
+        candidateNotes: formData.notes,
+        status: "ACTIVE",
+      };
+
+      const res = await fetch("http://localhost:5000/candidates", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to create candidate");
+      }
+
+      setToast("Candidate created successfully");
+      resetFormData();
+      
+      // Navigate and the Candidates page useEffect will refetch automatically
+      setTimeout(() => router.push("/candidates"), 1500);
+    } catch (error: any) {
+      console.error(error);
+      setToast(`Error: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSaveDraft = () => {
@@ -312,9 +354,10 @@ export default function CreateCandidatePage() {
         </button>
         <button 
           onClick={() => setModals({ ...modals, publish: true })} 
-          className="px-10 py-3 text-[11px] font-black uppercase tracking-widest rounded-lg bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95"
+          disabled={isSubmitting}
+          className="px-10 py-3 text-[11px] font-black uppercase tracking-widest rounded-lg bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95 disabled:opacity-50"
         >
-          Add Candidate
+          {isSubmitting ? "Adding..." : "Add Candidate"}
         </button>
       </div>
 
