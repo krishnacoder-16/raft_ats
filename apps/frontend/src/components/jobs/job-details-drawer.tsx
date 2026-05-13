@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Job } from "@/types/job";
 import { RecruiterAssignment } from "./recruiter-assignment";
 
+import { useRouter } from "next/navigation";
+
 interface JobDetailsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
@@ -12,6 +14,7 @@ interface JobDetailsDrawerProps {
 }
 
 export function JobDetailsDrawer({ isOpen, onClose, job }: JobDetailsDrawerProps) {
+  const router = useRouter();
   if (!job) return null;
 
   return (
@@ -150,7 +153,14 @@ export function JobDetailsDrawer({ isOpen, onClose, job }: JobDetailsDrawerProps
             </div>
 
             <div className="p-5 border-t bg-muted/10 grid grid-cols-3 gap-2 shrink-0">
-              <button className="flex items-center justify-center gap-1.5 py-2 bg-card border shadow-sm rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-muted text-foreground transition-all">
+              <button 
+                type="button"
+                onClick={() => {
+                  router.push(`/jobs/create?edit=${job.id}`);
+                  onClose();
+                }}
+                className="flex items-center justify-center gap-1.5 py-2 bg-card border shadow-sm rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-muted text-foreground transition-all"
+              >
                 <Edit3 className="h-3 w-3" /> Edit
               </button>
               <button className="flex items-center justify-center gap-1.5 py-2 bg-card border shadow-sm rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-muted text-foreground transition-all">

@@ -1,6 +1,7 @@
-import { MoreHorizontal, ChevronLeft, ChevronRight, MapPin, Users, Flame } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { Job } from "@/types/job";
 import { useJobStore } from "@/features/jobs/store/job-store";
+import { JobRowActions } from "./job-row-actions";
 
 interface JobsTableProps {
   data: Job[];
@@ -79,7 +80,7 @@ export function JobsTable({ data, totalCount, onRowClick }: JobsTableProps) {
                     <div className="flex-1 h-1.5 w-16 bg-muted rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-primary" 
-                        style={{ width: `${(job.hiredCount / job.openings) * 100}%` }} 
+                        style={{ width: `${Math.min((job.hiredCount / (job.openings || 1)) * 100, 100)}%` }} 
                       />
                     </div>
                     <span className="text-[10px] font-black text-muted-foreground tracking-widest">{job.hiredCount}/{job.openings}</span>
@@ -88,13 +89,11 @@ export function JobsTable({ data, totalCount, onRowClick }: JobsTableProps) {
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-1.5 text-[10px] font-black text-muted-foreground uppercase tracking-[0.1em]">
                     <MapPin className="h-3 w-3 text-primary/70" />
-                    {job.locations.length} {job.locations.length > 1 ? "Locations" : "Location"}
+                    {(job.locations || []).length} { (job.locations || []).length === 1 ? "Location" : "Locations"}
                   </div>
                 </td>
                 <td className="px-5 py-4 text-right">
-                  <button className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-primary transition-all">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </button>
+                  <JobRowActions job={job} />
                 </td>
               </tr>
             ))}

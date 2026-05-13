@@ -8,13 +8,17 @@ interface JobFilters {
 
 interface JobState {
   jobs: Job[];
+  isLoading: boolean;
+  error: string | null;
   searchQuery: string;
   filters: JobFilters;
   pagination: {
     page: number;
     pageSize: number;
   };
+  fetchJobs: () => Promise<void>;
   addJob: (job: Job) => void;
+  deleteJob: (id: string) => Promise<boolean>;
   updateJob: (id: string, updates: Partial<Job>) => void;
   setSearchQuery: (query: string) => void;
   setFilters: (filters: Partial<JobFilters>) => void;
@@ -22,73 +26,78 @@ interface JobState {
   resetFilters: () => void;
 }
 
-const initialMockJobs: Job[] = [
-  {
-    id: "J-001",
-    title: "Senior Frontend Developer",
-    company: "Google",
-    recruiters: ["John Smith", "Jane Doe"],
-    employmentType: "Full-time",
-    education: "Bachelor's in CS",
-    minExperience: 5,
-    maxExperience: 8,
-    minSalary: "120,000",
-    maxSalary: "180,000",
-    currency: "USD",
-    openings: 3,
-    priority: "High",
-    status: "Open",
-    skills: ["React", "TypeScript", "Next.js"],
-    description: "Looking for a seasoned frontend engineer to lead our core products.",
-    locations: [{ country: "USA", state: "CA", city: "Mountain View", pincode: "94043" }],
-    hiredCount: 1,
-    totalApplicants: 45,
-    postedDate: "2023-10-01",
-  },
-  {
-    id: "J-002",
-    title: "Backend Engineer",
-    company: "Amazon",
-    recruiters: ["Jane Doe"],
-    employmentType: "Remote",
-    education: "Master's in CS",
-    minExperience: 3,
-    maxExperience: 6,
-    minSalary: "100,000",
-    maxSalary: "150,000",
-    currency: "USD",
-    openings: 5,
-    priority: "Urgent",
-    status: "Open",
-    skills: ["Go", "Kubernetes", "AWS"],
-    description: "Help us build the next generation of logistics systems.",
-    locations: [
-      { country: "USA", state: "WA", city: "Seattle", pincode: "98101" },
-      { country: "Canada", state: "ON", city: "Toronto", pincode: "M5H" }
-    ],
-    hiredCount: 2,
-    totalApplicants: 120,
-    postedDate: "2023-10-05",
-  }
-];
-
 const initialFilters: JobFilters = {
   status: 'All Status',
   priority: 'All Priority',
 };
 
-export const useJobStore = create<JobState>((set) => ({
-  jobs: initialMockJobs,
+export const useJobStore = create<JobState>((set, get) => ({
+  jobs: [],
+  isLoading: false,
+  error: null,
   searchQuery: '',
   filters: initialFilters,
   pagination: {
     page: 1,
     pageSize: 10,
   },
+  fetchJobs: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await fetch('http://localhost:5000/jobs');
+      if (!response.ok) throw new Error('Failed to fetch jobs');
+      const data = await response.json();
+      
+      const mappedJobs: Job[] = data.map((j: any) => ({
+        id: j.id,
+        title: j.jobTitle,
+        company: j.clientCompany,
+        recruiters: j.assignedRecruiters || [],
+        employmentType: j.employmentType || "Full-time",
+        education: j.educationRequirement || "N/A",
+        minExperience: j.minExperience || 0,
+        maxExperience: j.maxExperience || 0,
+        minSalary: j.minSalary?.toString() || "0",
+        maxSalary: j.maxSalary?.toString() || "0",
+        currency: j.budgetCurrency || "INR",
+        openings: j.targetOpenings || 1,
+        priority: j.priorityLevel as JobPriority,
+        status: j.requisitionStatus as JobStatus,
+        skills: j.requiredSkills || [],
+        description: j.jobDescription || "",
+        locations: j.locations || [],
+        hiredCount: j.hiredCount || 0,
+        totalApplicants: j.pipelineCount || 0,
+        postedDate: new Date(j.createdAt).toLocaleDateString(),
+      }));
+
+      set({ jobs: mappedJobs, isLoading: false });
+    } catch (error: any) {
+      console.error(error);
+      set({ error: error.message, isLoading: false });
+    }
+  },
   addJob: (job) => set((state) => ({ 
     jobs: [job, ...state.jobs],
     pagination: { ...state.pagination, page: 1 } 
   })),
+  deleteJob: async (id) => {
+    try {
+      const res = await fetch(`http://localhost:5000/jobs/${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        set((state) => ({
+          jobs: state.jobs.filter((j) => j.id !== id),
+        }));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  },
   updateJob: (id, updates) => set((state) => ({
     jobs: state.jobs.map(j => j.id === id ? { ...j, ...updates } : j)
   })),

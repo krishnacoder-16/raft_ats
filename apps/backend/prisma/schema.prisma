@@ -42,12 +42,47 @@ model Candidate {
 }
 
 model Job {
-  id          String   @id @default(cuid())
-  title       String
-  department  String
-  location    String
-  type        String
-  salary      String?
-  status      String   @default("Open")
-  createdAt   DateTime @default(now())
+  id                     String    @id @default(cuid())
+
+  // BASIC INFORMATION
+  jobTitle               String
+  clientCompany          String
+  employmentType         String?
+  priorityLevel          String?   @default("Medium")
+
+  // TEAM & RECRUITER ASSIGNMENT
+  assignedRecruiters     String[]
+
+  // EXPERIENCE & COMPENSATION
+  minExperience          Int?
+  maxExperience          Int?
+
+  minSalary              Float?
+  maxSalary              Float?
+
+  budgetCurrency         String?   @default("INR")
+
+  targetOpenings         Int?      @default(1)
+
+  // SKILLS & EDUCATION
+  educationRequirement   String?
+
+  requiredSkills         String[]
+
+  // JOB DESCRIPTION
+  jobDescription         String?
+
+  // HIRING LOCATIONS
+  locations              Json?
+
+  // PUBLISHING SETTINGS
+  requisitionStatus      String?   @default("Open")
+
+  // PIPELINE METRICS
+  pipelineCount          Int?      @default(0)
+  hiredCount             Int?      @default(0)
+
+  // SYSTEM
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
 }

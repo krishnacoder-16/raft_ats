@@ -2,11 +2,12 @@
 
 import { X, Plus, Trash2, MapPin, Briefcase, DollarSign, Users, Award, FileText, Check, ChevronLeft, Save, Globe } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useJobStore } from "@/features/jobs/store/job-store";
 import { Job, JobLocation } from "@/types/job";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { Suspense } from "react";
 
 // --- UI Components ---
 
@@ -66,7 +67,7 @@ function Toast({ message, onClose }: { message: string, onClose: () => void }) {
 
 function FormSection({ title, subtitle, icon: Icon, children }: any) {
   return (
-    <div className="bg-card rounded-2xl border shadow-sm overflow-hidden">
+    <div className="bg-card rounded-2xl border shadow-sm overflow-visible relative">
       <div className="px-6 py-5 border-b bg-muted/5 flex items-center gap-3">
         <div className="p-2 rounded-xl bg-primary/10 text-primary">
           <Icon className="h-5 w-5" />
@@ -151,27 +152,104 @@ function RecruiterSelect({ selected, onToggle }: { selected: string[], onToggle:
 }
 
 export default function CreateJobPage() {
+  return (
+    <Suspense fallback={<div className="p-20 text-center font-black uppercase tracking-widest text-muted-foreground">Loading Form...</div>}>
+      <JobFormContent />
+    </Suspense>
+  );
+}
+
+function JobFormContent() {
   const router = useRouter();
-  const addJob = useJobStore((state) => state.addJob);
+  const searchParams = useSearchParams();
+  const editId = searchParams.get("edit");
+  const { addJob, jobs, fetchJobs } = useJobStore();
+
   const [formData, setFormData] = useState({
     title: "", company: "", recruiters: [] as string[], employmentType: "Full-time",
     education: "Bachelor's Degree", minExperience: 0, maxExperience: 0,
-    minSalary: "", maxSalary: "", currency: "USD", openings: 1,
+    minSalary: "", maxSalary: "", currency: "INR", salaryUnit: "Lakh", salaryDuration: "Per Year", openings: 1,
     priority: "Medium" as const, status: "Open" as const, skills: [] as string[], description: "",
   });
   const [locations, setLocations] = useState<JobLocation[]>([{ country: "", state: "", city: "", pincode: "" }]);
 
+  useEffect(() => {
+    if (editId) {
+      const jobToEdit = jobs.find(j => j.id === editId);
+      if (jobToEdit) {
+        setFormData({
+          title: jobToEdit.title,
+          company: jobToEdit.company,
+          recruiters: jobToEdit.recruiters,
+          employmentType: jobToEdit.employmentType,
+          education: jobToEdit.education,
+          minExperience: jobToEdit.minExperience,
+          maxExperience: jobToEdit.maxExperience,
+          minSalary: jobToEdit.minSalary,
+          maxSalary: jobToEdit.maxSalary,
+          currency: jobToEdit.currency,
+          salaryUnit: "Lakh", // Default for edit if not stored
+          salaryDuration: "Per Year", // Default for edit if not stored
+          openings: jobToEdit.openings,
+          priority: jobToEdit.priority,
+          status: jobToEdit.status,
+          skills: jobToEdit.skills,
+          description: jobToEdit.description,
+        });
+        setLocations(jobToEdit.locations);
+      }
+    }
+  }, [editId, jobs]);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [modals, setModals] = useState({ discard: false, publish: false });
   const [toast, setToast] = useState<string | null>(null);
 
-  const handlePublish = () => {
-    const newJob: Job = {
-      id: `J-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`,
-      ...formData, locations: locations, hiredCount: 0, totalApplicants: 0, postedDate: new Date().toISOString().split('T')[0],
-    };
-    addJob(newJob);
-    setToast("Requisition Published Successfully");
-    setTimeout(() => router.push("/jobs"), 1000);
+  const handlePublish = async () => {
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        jobTitle: formData.title,
+        clientCompany: formData.company,
+        employmentType: formData.employmentType,
+        priorityLevel: formData.priority,
+        assignedRecruiters: formData.recruiters,
+        minExperience: formData.minExperience,
+        maxExperience: formData.maxExperience,
+        minSalary: formData.minSalary.replace(/[^0-9.]/g, ""),
+        maxSalary: formData.maxSalary.replace(/[^0-9.]/g, ""),
+        budgetCurrency: formData.currency,
+        targetOpenings: formData.openings,
+        educationRequirement: formData.education,
+        requiredSkills: formData.skills,
+        jobDescription: formData.description,
+        locations: locations,
+        requisitionStatus: formData.status,
+      };
+
+      const res = await fetch(editId ? `http://localhost:5000/jobs/${editId}` : "http://localhost:5000/jobs", {
+        method: editId ? "PUT" : "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || `Failed to ${editId ? 'update' : 'publish'} requisition`);
+      }
+
+      setToast(editId ? "Requisition Updated Successfully" : "Requisition Published Successfully");
+      await fetchJobs(); // Refresh store
+      setTimeout(() => router.push("/jobs"), 1500);
+    } catch (error: any) {
+      console.error(error);
+      setToast(`Error: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSaveDraft = () => {
@@ -187,8 +265,8 @@ export default function CreateJobPage() {
             <ChevronLeft className="h-5 w-5" />
           </button>
           <div>
-            <h1 className="text-2xl font-black tracking-tighter text-foreground">Create New Requisition</h1>
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Jobs / New Requisition</p>
+            <h1 className="text-2xl font-black tracking-tighter text-foreground">{editId ? "Edit Requisition" : "Create New Requisition"}</h1>
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Jobs / {editId ? "Edit" : "New"} Requisition</p>
           </div>
         </div>
       </div>
@@ -235,34 +313,44 @@ export default function CreateJobPage() {
             <div className="space-y-2">
               <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Experience Range (Years)</label>
               <div className="flex items-center gap-3">
-                <input type="number" placeholder="Min" value={formData.minExperience} onChange={(e) => setFormData({...formData, minExperience: parseInt(e.target.value)})}
+                <input type="number" placeholder="Min" value={formData.minExperience ?? 0} onChange={(e) => setFormData({...formData, minExperience: parseInt(e.target.value) || 0})}
                   className="w-full h-12 px-4 rounded-xl border border-border bg-muted/20 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm" />
                 <span className="font-bold text-muted-foreground">to</span>
-                <input type="number" placeholder="Max" value={formData.maxExperience} onChange={(e) => setFormData({...formData, maxExperience: parseInt(e.target.value)})}
+                <input type="number" placeholder="Max" value={formData.maxExperience ?? 0} onChange={(e) => setFormData({...formData, maxExperience: parseInt(e.target.value) || 0})}
                   className="w-full h-12 px-4 rounded-xl border border-border bg-muted/20 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm" />
               </div>
             </div>
-            <div className="space-y-2">
-              <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Salary Budget ({formData.currency})</label>
-              <div className="flex items-center gap-3">
-                <input type="text" placeholder="Min Salary" value={formData.minSalary} onChange={(e) => setFormData({...formData, minSalary: e.target.value})}
-                  className="w-full h-12 px-4 rounded-xl border border-border bg-muted/20 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm" />
-                <span className="font-bold text-muted-foreground">-</span>
-                <input type="text" placeholder="Max Salary" value={formData.maxSalary} onChange={(e) => setFormData({...formData, maxSalary: e.target.value})}
-                  className="w-full h-12 px-4 rounded-xl border border-border bg-muted/20 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm" />
+            <div className="space-y-2 col-span-2">
+              <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Salary Budget</label>
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-2 flex-1 min-w-[200px]">
+                  <input type="text" placeholder="Min" value={formData.minSalary ?? ""} onChange={(e) => setFormData({...formData, minSalary: e.target.value})}
+                    className="w-full h-12 px-4 rounded-xl border border-border bg-muted/20 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm" />
+                  <span className="font-bold text-muted-foreground">-</span>
+                  <input type="text" placeholder="Max" value={formData.maxSalary ?? ""} onChange={(e) => setFormData({...formData, maxSalary: e.target.value})}
+                    className="w-full h-12 px-4 rounded-xl border border-border bg-muted/20 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm" />
+                </div>
+                
+                <select value={formData.currency} onChange={(e) => setFormData({...formData, currency: e.target.value})}
+                  className="h-12 px-4 rounded-xl border border-border bg-muted/20 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer shadow-sm">
+                  <option>INR</option><option>USD</option><option>EUR</option>
+                </select>
+
+                <select value={formData.salaryUnit} onChange={(e) => setFormData({...formData, salaryUnit: e.target.value})}
+                  className="h-12 px-4 rounded-xl border border-border bg-muted/20 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer shadow-sm">
+                  <option>Lakh</option><option>Thousand</option><option>Million</option><option>Crore</option>
+                </select>
+
+                <select value={formData.salaryDuration} onChange={(e) => setFormData({...formData, salaryDuration: e.target.value})}
+                  className="h-12 px-4 rounded-xl border border-border bg-muted/20 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer shadow-sm">
+                  <option>Per Year</option><option>Per Month</option>
+                </select>
               </div>
             </div>
             <div className="space-y-2">
               <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Target Openings</label>
-              <input type="number" value={formData.openings} onChange={(e) => setFormData({...formData, openings: parseInt(e.target.value)})}
+              <input type="number" value={formData.openings ?? 1} onChange={(e) => setFormData({...formData, openings: parseInt(e.target.value) || 1})}
                 className="w-full h-12 px-4 rounded-xl border border-border bg-muted/20 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm" />
-            </div>
-            <div className="space-y-2">
-              <label className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Budget Currency</label>
-              <select value={formData.currency} onChange={(e) => setFormData({...formData, currency: e.target.value})}
-                className="w-full h-12 px-4 rounded-xl border border-border bg-muted/20 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer shadow-sm">
-                <option>USD</option><option>EUR</option><option>GBP</option><option>INR</option>
-              </select>
             </div>
           </div>
         </FormSection>
@@ -364,9 +452,10 @@ export default function CreateJobPage() {
         </button>
         <button 
           onClick={() => setModals({ ...modals, publish: true })} 
-          className="px-10 py-3.5 text-xs font-black uppercase tracking-widest rounded-xl bg-primary text-primary-foreground shadow-xl shadow-primary/30 hover:bg-primary/90 transition-all active:scale-95"
+          disabled={isSubmitting}
+          className="px-10 py-3.5 text-xs font-black uppercase tracking-widest rounded-xl bg-primary text-primary-foreground shadow-xl shadow-primary/30 hover:bg-primary/90 transition-all active:scale-95 disabled:opacity-50"
         >
-          Publish Requisition
+          {isSubmitting ? "Saving..." : (editId ? "Update Requisition" : "Publish Requisition")}
         </button>
       </div>
 
@@ -385,9 +474,9 @@ export default function CreateJobPage() {
         isOpen={modals.publish} 
         onClose={() => setModals({ ...modals, publish: false })}
         onConfirm={handlePublish}
-        title="Publish Requisition?"
-        description="This requisition will become visible to assigned recruiters and available in the ATS pipeline."
-        confirmText="Publish"
+        title={editId ? "Update Requisition?" : "Publish Requisition?"}
+        description={editId ? "Confirm all changes before updating the job requisition." : "This requisition will become visible to assigned recruiters and available in the ATS pipeline."}
+        confirmText={editId ? "Update" : "Publish"}
         confirmVariant="primary"
       />
 

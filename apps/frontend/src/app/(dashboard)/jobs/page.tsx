@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { JobKpiCards } from "@/components/jobs/job-kpi-cards";
 import { JobsFilters } from "@/components/jobs/jobs-filters";
 import { JobsTable } from "@/components/jobs/jobs-table";
@@ -9,9 +9,13 @@ import { useJobStore } from "@/features/jobs/store/job-store";
 import type { Job } from "@/types/job";
 
 export default function JobsPage() {
-  const { jobs, searchQuery, filters, pagination } = useJobStore();
+  const { jobs, searchQuery, filters, pagination, fetchJobs, isLoading, error } = useJobStore();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+
+  useEffect(() => {
+    fetchJobs();
+  }, [fetchJobs]);
 
   const filteredJobs = useMemo(() => {
     return jobs.filter((job) => {
@@ -43,14 +47,26 @@ export default function JobsPage() {
       <div className="space-y-6">
         <JobsFilters />
         
-        <JobsTable 
-          data={paginatedJobs} 
-          totalCount={filteredJobs.length}
-          onRowClick={(job) => {
-            setSelectedJob(job);
-            setIsDrawerOpen(true);
-          }} 
-        />
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-20 bg-card rounded-xl border shadow-sm">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
+            <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Loading Jobs...</p>
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-20 bg-card rounded-xl border shadow-sm">
+            <p className="text-sm font-bold text-destructive uppercase tracking-widest">Error Loading Jobs</p>
+            <p className="text-xs text-muted-foreground mt-2">{error}</p>
+          </div>
+        ) : (
+          <JobsTable 
+            data={paginatedJobs} 
+            totalCount={filteredJobs.length}
+            onRowClick={(job) => {
+              setSelectedJob(job);
+              setIsDrawerOpen(true);
+            }} 
+          />
+        )}
       </div>
 
       <JobDetailsDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} job={selectedJob} />

@@ -14,7 +14,9 @@ export const columns: ColumnDef<Job>[] = [
     cell: ({ row }) => (
       <div className="flex flex-col">
         <span className="font-extrabold text-foreground whitespace-nowrap">{row.getValue("title")}</span>
-        <span className="text-xs text-muted-foreground mt-1 font-medium">{row.original.client} • {row.original.location}</span>
+        <span className="text-xs text-muted-foreground mt-1 font-medium">
+          {row.original.company} • {row.original.locations?.[0]?.city || "Remote"}
+        </span>
       </div>
     ),
   },
@@ -29,25 +31,28 @@ export const columns: ColumnDef<Job>[] = [
     cell: ({ row }) => {
       const p = row.getValue("priority") as string;
       return (
-        <span className={`text-xs font-bold uppercase tracking-wider ${p === 'High' ? 'text-red-600' : p === 'Medium' ? 'text-amber-600' : 'text-slate-500'}`}>
+        <span className={`text-xs font-bold uppercase tracking-wider ${p === 'High' || p === 'Urgent' ? 'text-red-600' : p === 'Medium' ? 'text-amber-600' : 'text-slate-500'}`}>
           {p}
         </span>
       );
     }
   },
   {
-    accessorKey: "recruiter",
+    accessorKey: "recruiters",
     header: "Assigned Recruiter",
-    cell: ({ row }) => <RecruiterAssignment name={row.getValue("recruiter")} />,
+    cell: ({ row }) => {
+      const recruiters = row.original.recruiters || [];
+      return <RecruiterAssignment name={recruiters[0] || "Unassigned"} />;
+    },
   },
   {
     id: "progress",
     header: "Hiring Progress",
     cell: ({ row }) => (
       <HiringProgress 
-        candidates={row.original.candidateCount} 
-        offers={row.original.offersCount} 
-        openings={row.original.openings} 
+        candidates={row.original.totalApplicants || 0} 
+        offers={row.original.hiredCount || 0} 
+        openings={row.original.openings || 1} 
       />
     ),
   },

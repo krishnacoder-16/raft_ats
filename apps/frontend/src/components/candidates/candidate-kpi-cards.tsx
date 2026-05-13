@@ -23,7 +23,7 @@ export function CandidateKpiCards() {
     },
     {
       label: "Interviewing",
-      value: candidates.filter(c => c.stage.includes("Round")).length,
+      value: candidates.filter(c => (c.stage ?? "").includes("Round")).length,
       icon: Clock,
       color: "text-emerald-600",
       bg: "bg-emerald-50",
